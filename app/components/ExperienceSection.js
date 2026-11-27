@@ -138,17 +138,17 @@ export default function ExperienceSection() {
             })}
           </div>
 
-          {/* Active Role Detail Panel (Hover pauses 5s auto-rotation) */}
+          {/* Active Role Detail Panel (Fixed height via CSS grid stacking; hover pauses 5s auto-rotation) */}
           {activeRole && (
             <div
               onMouseEnter={() => setIsHoveringDetail(true)}
               onMouseLeave={() => setIsHoveringDetail(false)}
-              className="lg:col-span-7 relative bg-white rounded-[32px] border-[3px] border-black p-7 sm:p-10 shadow-[10px_10px_0_#000] transition-all"
+              className="lg:col-span-7 relative bg-white rounded-[32px] border-[3px] border-black p-7 sm:p-10 shadow-[10px_10px_0_#000]"
             >
               <ScrollPopIcon
                 key={activeRole.id}
                 rotate="6deg"
-                className="absolute -top-5 right-6"
+                className="absolute -top-5 right-6 z-20"
               >
                 <DieCutSticker
                   bg={activeRole.tagBg}
@@ -162,77 +162,94 @@ export default function ExperienceSection() {
                 </DieCutSticker>
               </ScrollPopIcon>
 
-              <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-                <div className="flex flex-wrap items-center gap-3">
-                  <SpeechTag bg="#4B69F0" text="#F0EBE6">
-                    {activeRole.company}
-                  </SpeechTag>
-                  <span className="inline-flex items-center gap-1.5 text-xs font-display font-bold text-black/65">
-                    <FaCalendarAlt />
-                    {activeRole.period}
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 text-xs font-display font-bold text-black/65">
-                    <FaMapMarkerAlt />
-                    {activeRole.location}
-                  </span>
-                </div>
-
-                {/* Auto-cycle status pill */}
-                <span
-                  className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-display font-bold border border-black/20 ${
-                    isHoveringDetail
-                      ? "bg-[#FFE1F0] text-black"
-                      : "bg-[#E6FAB9] text-black"
-                  }`}
-                >
-                  {isHoveringDetail ? (
-                    <>
-                      <FaPause className="text-[9px]" />
-                      <span>paused</span>
-                    </>
-                  ) : (
-                    <>
-                      <FaPlay className="text-[9px]" />
-                      <span>5s auto</span>
-                    </>
-                  )}
-                </span>
-              </div>
-
-              <h3 className="font-display font-extrabold text-2xl sm:text-4xl lowercase mb-3">
-                {activeRole.role}
-              </h3>
-
-              <p className="text-black/80 text-base leading-relaxed mb-6">
-                {activeRole.summary}
-              </p>
-
-              {/* Deliverable pills */}
-              <div className="flex flex-wrap gap-2 mb-6">
-                {Array.isArray(activeRole.deliverables) &&
-                  activeRole.deliverables.map((del, dIdx) => (
-                    <span
-                      key={dIdx}
-                      className="px-3.5 py-1.5 rounded-full bg-[#F0EBE6] border-2 border-black font-display font-bold text-xs lowercase"
+              <div className="grid grid-cols-1 grid-rows-1">
+                {roleList.map((roleItem, idx) => {
+                  const isCurrent = idx === selectedIdx;
+                  return (
+                    <div
+                      key={roleItem.id}
+                      aria-hidden={!isCurrent}
+                      className={`col-start-1 row-start-1 transition-opacity duration-300 ${
+                        isCurrent
+                          ? "opacity-100 visible pointer-events-auto"
+                          : "opacity-0 invisible pointer-events-none"
+                      }`}
                     >
-                      {del}
-                    </span>
-                  ))}
-              </div>
+                      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                        <div className="flex flex-wrap items-center gap-3">
+                          <SpeechTag bg="#4B69F0" text="#F0EBE6">
+                            {roleItem.company}
+                          </SpeechTag>
+                          <span className="inline-flex items-center gap-1.5 text-xs font-display font-bold text-black/65">
+                            <FaCalendarAlt />
+                            {roleItem.period}
+                          </span>
+                          <span className="inline-flex items-center gap-1.5 text-xs font-display font-bold text-black/65">
+                            <FaMapMarkerAlt />
+                            {roleItem.location}
+                          </span>
+                        </div>
 
-              {/* Bullet Achievements */}
-              <ul className="space-y-3.5 pt-4 border-t-2 border-black/10">
-                {Array.isArray(activeRole.points) &&
-                  activeRole.points.map((pt, pIdx) => (
-                    <li
-                      key={pIdx}
-                      className="flex items-start gap-3 text-sm sm:text-base text-black/85 leading-relaxed"
-                    >
-                      <FaCheckCircle className="text-[#2D7864] shrink-0 mt-1 text-base" />
-                      <span>{pt}</span>
-                    </li>
-                  ))}
-              </ul>
+                        {/* Auto-cycle status pill */}
+                        <span
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-display font-bold border border-black/20 ${
+                            isHoveringDetail
+                              ? "bg-[#FFE1F0] text-black"
+                              : "bg-[#E6FAB9] text-black"
+                          }`}
+                        >
+                          {isHoveringDetail ? (
+                            <>
+                              <FaPause className="text-[9px]" />
+                              <span>paused</span>
+                            </>
+                          ) : (
+                            <>
+                              <FaPlay className="text-[9px]" />
+                              <span>5s auto</span>
+                            </>
+                          )}
+                        </span>
+                      </div>
+
+                      <h3 className="font-display font-extrabold text-2xl sm:text-4xl lowercase mb-3">
+                        {roleItem.role}
+                      </h3>
+
+                      <p className="text-black/80 text-base leading-relaxed mb-6">
+                        {roleItem.summary}
+                      </p>
+
+                      {/* Deliverable pills */}
+                      <div className="flex flex-wrap gap-2 mb-6">
+                        {Array.isArray(roleItem.deliverables) &&
+                          roleItem.deliverables.map((del, dIdx) => (
+                            <span
+                              key={dIdx}
+                              className="px-3.5 py-1.5 rounded-full bg-[#F0EBE6] border-2 border-black font-display font-bold text-xs lowercase"
+                            >
+                              {del}
+                            </span>
+                          ))}
+                      </div>
+
+                      {/* Bullet Achievements */}
+                      <ul className="space-y-3.5 pt-4 border-t-2 border-black/10">
+                        {Array.isArray(roleItem.points) &&
+                          roleItem.points.map((pt, pIdx) => (
+                            <li
+                              key={pIdx}
+                              className="flex items-start gap-3 text-sm sm:text-base text-black/85 leading-relaxed"
+                            >
+                              <FaCheckCircle className="text-[#2D7864] shrink-0 mt-1 text-base" />
+                              <span>{pt}</span>
+                            </li>
+                          ))}
+                      </ul>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>
