@@ -1,25 +1,27 @@
-
-
+import CustomCursor from "./components/CustomCursor";
 import Navbar from "./components/Navbar";
 import HeroSection from "./components/HeroSection";
-import AboutSection from "./components/AboutSection";
 import ExperienceSection from "./components/ExperienceSection";
-import SkillsSection from "./components/SkillsSection";
 import PortfolioSection from "./components/PortfolioSection";
+import AboutSection from "./components/AboutSection";
+import SkillsSection from "./components/SkillsSection";
 import ContactSection from "./components/ContactSection";
+import ScrollPopups from "./components/ScrollPopups";
 
 export default function Home() {
   return (
-    <div className="font-sans min-h-screen bg-white text-gray-900">
+    <div className="min-h-screen bg-[#F0EBE6] text-black">
+      <CustomCursor />
+      <ScrollPopups />
       <Navbar />
-      <main className="pt-20">
+      <main>
         <HeroSection />
-        <section id="about"><AboutSection /></section>
-        <section id="experience"><ExperienceSection /></section>
-        <section id="skills"><SkillsSection /></section>
-        <section id="portfolio"><PortfolioSection /></section>
-        <section id="contact"><ContactSection /></section>
+        <ExperienceSection />
+        <PortfolioSection />
+        <AboutSection />
+        <SkillsSection />
       </main>
+      <ContactSection />
     </div>
   );
 }
